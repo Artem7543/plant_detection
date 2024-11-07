@@ -1,34 +1,37 @@
+import io
 import streamlit as st
 from PIL import Image
-import pandas as pd
+
+
+# import pandas as pd
 from pathlib import Path
-import pickle
+# import pickle
 
 # Подключаем необходимые библиотеки
-import matplotlib.pyplot as plt # для визуализации данных с помощью графиков
+#import matplotlib.pyplot as plt # для визуализации данных с помощью графиков
 
-import requests # это мощный инструмент для работы с HTTP-запросами
-import pandas as pd # позволяет удобно работать с данными в формате таблиц
-import seaborn as sns # готовые шаблоны для статистической визуализации
-import numpy as np # для работы с массивами и математическими операциями
+# import requests # это мощный инструмент для работы с HTTP-запросами
+# import pandas as pd # позволяет удобно работать с данными в формате таблиц
+# import seaborn as sns # готовые шаблоны для статистической визуализации
+# import numpy as np # для работы с массивами и математическими операциями
 
-from PIL import Image # для работы с изображениями
+# from PIL import Image # для работы с изображениями
 # from IPython import display #  для отображения изображений из файлов в Jupyter Notebook
 
-from typing import List, Tuple, Dict, Union, Callable # для аннотирования возвращаемых типов, позволяет определять тип переменной
-from tqdm.notebook import tqdm # предназначен для быстрого и расширяемого внедрения индикаторов выполнения (progressbar)
-from pathlib import Path # представляют путь к файлу или каталогу в файловой системе вашего компьютера.
+# from typing import List, Tuple, Dict, Union, Callable # для аннотирования возвращаемых типов, позволяет определять тип переменной
+# from tqdm.notebook import tqdm # предназначен для быстрого и расширяемого внедрения индикаторов выполнения (progressbar)
+# from pathlib import Path # представляют путь к файлу или каталогу в файловой системе вашего компьютера.
 
 # import tarfile
-import zipfile # можно создавать, считывать, записывать zip-файлы
+# import zipfile # можно создавать, считывать, записывать zip-файлы
 
-import os # функции для работы с операционной системой
+# import os # функции для работы с операционной системой
 
-import torch # Используется для решения различных задач: компьютерное зрение, обработка естественного языка
-import torchvision # состоит из популярных наборов данных, архитектур моделей и общих преобразований изображений для компьютерного зрения
-from torchvision import transforms # позволяет вам поворачивать, масштабировать, наклонять или сдвигать элемент
-from torchvision.transforms import v2 # работа с изображениями
-from torchvision.io import read_image # cчитывает изображение JPEG, PNG или GIF в трехмерное изображение RGB или оттенки серого
+# import torch # Используется для решения различных задач: компьютерное зрение, обработка естественного языка
+# import torchvision # состоит из популярных наборов данных, архитектур моделей и общих преобразований изображений для компьютерного зрения
+# from torchvision import transforms # позволяет вам поворачивать, масштабировать, наклонять или сдвигать элемент
+# from torchvision.transforms import v2 # работа с изображениями
+# from torchvision.io import read_image # cчитывает изображение JPEG, PNG или GIF в трехмерное изображение RGB или оттенки серого
 
 from ultralytics import YOLO
 
@@ -77,7 +80,7 @@ image = load_image(image_path)
 # diabet_model = load_model(model_path)
 # путь до модели. Загружаю ONNX модель
 model_path = 'best.onnx'
-onnx_model = YOLO(model_path)
+model = YOLO(model_path)
 
 # ================= Пути до картинок примеров и прочие пути ===========
 
@@ -89,7 +92,7 @@ EXAMPLES_DIR: Path = ('main_example_image.jpg')
 # ---------- отрисовка текста и картинки ------------------------
 st.write(
     """
-    ### Диагностика диабета/Детекция и обнаружение заболеваний и состояний здоровья растений
+    ### Детекция и обнаружение заболеваний и состояний здоровья растений
     Введите ваши данные и получите результат
     """
 )
@@ -147,7 +150,7 @@ if st_image:
     if st.button('Распознать', on_click=detection_counter):
         with st.spinner('Распознавание фото ...'):
             # result_pil_image = detector_model.detect_image(pil_image, prob_threshold)
-            result_pil_image = model.predict(source=pil_image, conf=prob_threshold, iou=iou_threshold, verbose=True )
+            result_pil_image = model.predict(source=pil_image, conf=conf_threshold, iou=iou_threshold, verbose=True )
 # предикт модели входных данных, на выходе 1 из 46 классов растений и возможные заболевания
 
 if result_pil_image is not None:
