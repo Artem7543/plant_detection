@@ -1,1 +1,16 @@
 streamlit
+scikit-learn>=1.5.0
+Pillow
+joblib
+onnx
+onnxruntime
+matplotlib>=3.3.0
+numpy>=1.22.2
+requests>=2.23.0
+scipy>=1.4.1
+torch>=1.8.0
+torchvision>=0.9.0
+tqdm>=4.64.0
+seaborn>=0.11.0
+ultralytics
+timm
