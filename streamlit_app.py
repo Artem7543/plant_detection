@@ -1,10 +1,11 @@
 import io
 import streamlit as st
 from PIL import Image
-
+from pathlib import Path
+import ultralytics
+from ultralytics import YOLO
 
 # import pandas as pd
-from pathlib import Path
 # import pickle
 
 # Подключаем необходимые библиотеки
@@ -33,7 +34,7 @@ from pathlib import Path
 # from torchvision.transforms import v2 # работа с изображениями
 # from torchvision.io import read_image # cчитывает изображение JPEG, PNG или GIF в трехмерное изображение RGB или оттенки серого
 
-from ultralytics import YOLO
+
 
 
 # 58_Face_Age_Gender_Emotion_Recognition_Streamlit_ONNX.ipynb
