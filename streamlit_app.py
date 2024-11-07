@@ -2,7 +2,7 @@ import io
 import streamlit as st
 from PIL import Image
 from pathlib import Path
-import ultralytics
+
 from ultralytics import YOLO
 
 # import pandas as pd
@@ -45,7 +45,7 @@ from ultralytics import YOLO
 st.set_page_config(
     layout='wide',
     initial_sidebar_state='auto',
-    page_title='Diabetes app/Plant Detection',
+    page_title='Plant Detection',
     page_icon='🧊',
 )
 
@@ -171,3 +171,10 @@ if 'image_download_count' in st.session_state and st_image:
     st.success(f'Изображение {st_image.name} сохранено')
 
 # предикт модели входных данных, на выходе 1 из 46 классов растений (и возможные заболевания)
+
+# result_np_image = results_l[0].plot()
+# сделать преобразование BGR -> RGB
+# result_np_image = cv2.cvtColor(result_np_image, cv2.COLOR_BGR2RGB)
+# отрисовка результата
+# plt.figure(figsize=(10, 8))
+# plt.imshow(result_np_image);
