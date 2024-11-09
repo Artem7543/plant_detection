@@ -1,6 +1,7 @@
 # 🎈 Приложение компьютерное зрение в детекции заболеваний растений  [PlantDetection](https://universe.roboflow.com/kyrgyz-national-university/plant-disease-detection-2j8lg 
 ). 
 
+https://universe.roboflow.com/kyrgyz-national-university/plant-disease-detection-2j8lg 
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
 
