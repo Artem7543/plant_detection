@@ -1,45 +1,25 @@
 import io
 import streamlit as st
-from PIL import Image
-from pathlib import Path
 
 from typing import List, Dict, Union, Tuple, Optional, Any
-from pathlib import Path
-import os
-
 import cv2
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import onnxruntime as ort
 from onnxruntime.capi.onnxruntime_inference_collection import InferenceSession
 
-import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
-import matplotlib.pyplot as plt
-
-# import pandas as pd
-# import pickle
-
-# Подключаем необходимые библиотеки
-#import matplotlib.pyplot as plt # для визуализации данных с помощью графиков
-
-# import requests # это мощный инструмент для работы с HTTP-запросами
+import matplotlib.pyplot as plt # для визуализации данных с помощью графиков
+import requests # это мощный инструмент для работы с HTTP-запросами
 # import pandas as pd # позволяет удобно работать с данными в формате таблиц
 # import seaborn as sns # готовые шаблоны для статистической визуализации
-# import numpy as np # для работы с массивами и математическими операциями
+import numpy as np # для работы с массивами и математическими операциями
+from tqdm.notebook import tqdm # предназначен для быстрого и расширяемого внедрения индикаторов выполнения (progressbar)
+from pathlib import Path # представляют путь к файлу или каталогу в файловой системе вашего компьютера.
 
-# from PIL import Image # для работы с изображениями
-# from IPython import display #  для отображения изображений из файлов в Jupyter Notebook
-
-# from typing import List, Tuple, Dict, Union, Callable # для аннотирования возвращаемых типов, позволяет определять тип переменной
-# from tqdm.notebook import tqdm # предназначен для быстрого и расширяемого внедрения индикаторов выполнения (progressbar)
-# from pathlib import Path # представляют путь к файлу или каталогу в файловой системе вашего компьютера.
-
-# import tarfile
 # import zipfile # можно создавать, считывать, записывать zip-файлы
 
-# import os # функции для работы с операционной системой
+import os # функции для работы с операционной системой
 
 # import torch # Используется для решения различных задач: компьютерное зрение, обработка естественного языка
 # import torchvision # состоит из популярных наборов данных, архитектур моделей и общих преобразований изображений для компьютерного зрения
@@ -77,11 +57,10 @@ def load_image(image_path):
 @st.cache_data
 def load_model(model_path):
     # загрузка модели
+    providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']   
     with open(model_path, 'rb') as f:
-        model = YOLO(f)
-        # model = pickle.load(f)
+        model = ort.InferenceSession(model_path, providers=providers)        
     return model
-
 
 # ------------- загрузка картинки для страницы и модели ---------
 
@@ -90,24 +69,17 @@ image_path = 'main_page_image.jpg'
 image = load_image(image_path)
 
 # путь до модели. Загружаю ONNX модель
-# model_path = 'model.pkl'
-# diabet_model = load_model(model_path)
-# путь до модели. Загружаю ONNX модель
 model_path = 'best.onnx'
-model = YOLO(model_path)
+model = ort.InferenceSession(model_path, providers=providers)
 
 # ================= Пути до картинок примеров и прочие пути ===========
 
-#EXAMPLES_DIR: Path = Path('examples_media')
-#OUTPUT_RESULTS_DIR: Path = Path('output_results')
 EXAMPLES_DIR: Path = ('main_example_image.jpg')
-#MAIN_EXAMPLE_VIDEO_PATH: Path = EXAMPLES_DIR/ 'example_video.mp4'
 
 # ---------- отрисовка текста и картинки ------------------------
 st.write(
     """
     ### Детекция и обнаружение заболеваний и состояний здоровья растений
-    Введите ваши данные и получите результат
     """
 )
 
@@ -123,7 +95,7 @@ conf_threshold = st.sidebar.slider(
     "Порог уверенности для детекции",
     min_value=0.1,
     max_value=0.9,
-    value=0.3,
+    value=0.5,
     step=0.1,
     )
 
@@ -163,9 +135,7 @@ if st_image:
     # ================ Кнопка распознать ==================
     if st.button('Распознать', on_click=detection_counter):
         with st.spinner('Распознавание фото ...'):
-            # result_pil_image = detector_model.detect_image(pil_image, prob_threshold)
             result_pil_image = model.predict(source=pil_image, conf=conf_threshold, iou=iou_threshold, verbose=True )
-# предикт модели входных данных, на выходе 1 из 46 классов растений и возможные заболевания
 
 if result_pil_image is not None:
     st.image(result_pil_image)
@@ -182,12 +152,3 @@ if result_pil_image is not None:
 
 if 'image_download_count' in st.session_state and st_image:
     st.success(f'Изображение {st_image.name} сохранено')
-
-# предикт модели входных данных, на выходе 1 из 46 классов растений (и возможные заболевания)
-
-# result_np_image = results_l[0].plot()
-# сделать преобразование BGR -> RGB
-# result_np_image = cv2.cvtColor(result_np_image, cv2.COLOR_BGR2RGB)
-# отрисовка результата
-# plt.figure(figsize=(10, 8))
-# plt.imshow(result_np_image);
